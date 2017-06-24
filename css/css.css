@@ -1,0 +1,16 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#mapid {
+  height: 100%;
+}
+
+.pull-right {
+  float: right;
+}
+
+.popupmsg {
+  text-align: center;
+}
