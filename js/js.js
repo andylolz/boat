@@ -19,6 +19,7 @@ $(function() {
     }
     var msg = '';
     msg += '<div class="popupmsg"><h1>Jasmine ' + wasis + ' here</h1>';
+    msg += '<img src="img/jasmine.jpg" width="100%" />';
     msg += '<h2><em>near ' + d['location'] + '</em></h2>'
     if (current == 0) {
       msg += '<p>Arrived ' + moment(d['date']).fromNow() + '.</p>';
