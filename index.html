@@ -63,7 +63,7 @@
 
           var d = data[0];
           themap = L.map('mapid').setView([d['lat'], d['lng']], 12);
-          L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(themap);
+          L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(themap);
           marker = L.marker([d['lat'], d['lng']])
               .bindPopup('')
               .addTo(themap)
