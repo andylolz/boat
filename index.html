@@ -1,5 +1,3 @@
----
----
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,22 +10,25 @@
   <script src="//code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="//unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-  <script src="js/js.js?ver={{ site.github.build_revision }}"></script>
+  <script src="js/ical.min.js?ver={{ site.github.build_revision }}"></script>
   <script>
 $(function () {
-  var params = {
-    key: 'wFTSIH61nwMjLBhphd4T',
-    query: "SELECT * FROM 'home' ORDER BY `date` DESC"
-  }
-
-  var allData = null
+  var allData = []
   var marker = null
   var themap = null
   var current = 0
 
+  function toMoment (timestamp) {
+    return moment(timestamp.year + '-' + timestamp.month + '-' + timestamp.day, 'YYYY-M-D')
+  }
+
   function setupMarker () {
     var d = allData[current]
-    marker.setLatLng([d.lat, d.lng])
+    var loc = d.location.split(', ')
+    marker.setLatLng(loc)
+
+    var summary = d.summary
+    summary = (summary.indexOf(' to ') !== -1) ? summary.split(' to ')[1] : ''
 
     var wasis = 'was'
     if (current === 0) {
@@ -36,12 +37,12 @@ $(function () {
     var msg = ''
     msg += '<div class="popupmsg"><h1>Jasmine ' + wasis + ' here</h1>'
     msg += '<img src="img/jasmine.jpg?ver={{ site.github.build_revision }}" width="100%" />'
-    msg += '<h2><em>near ' + d['location'] + '</em></h2>'
+    msg += '<h2><em>near ' + summary + '</em></h2>'
     if (current === 0) {
-      msg += '<p>Arrived ' + moment(d['date']).fromNow() + '.</p>'
+      msg += '<p>Arrived ' + toMoment(d.endDate).fromNow() + '.</p>'
     } else {
-      var endDate = moment(allData[current - 1]['date'])
-      msg += '<p>' + moment(d['date']).format('Do MMMM') + '&ndash;' + endDate.format('Do MMMM')
+      var endDate = toMoment(allData[current - 1].endDate)
+      msg += '<p>' + toMoment(d.endDate).format('Do MMMM') + '&ndash;' + endDate.format('Do MMMM')
       msg += ' (' + endDate.fromNow() + ')</p>'
     }
     msg += '</div><p><a href="#" class="prev">&larr;</a>'
@@ -53,19 +54,24 @@ $(function () {
     var popup = marker.getPopup()
     popup.setContent(msg)
 
-    themap.panTo([d.lat, d.lng], {duration: 4})
+    themap.panTo(loc, {duration: 4})
   }
 
   $.ajax({
-    url: 'https://api.morph.io/andylolz/boat/data.json?' + $.param(params),
-    dataType: 'jsonp',
-    success: function (data) {
-      allData = data
+    url: 'https://datapipes.okfnlabs.org/none/?url=https://calendar.google.com/calendar/ical/7phgh51gv2gnm4jqigj8qaf06g%40group.calendar.google.com/public/basic.ics',
+    success: function (resp) {
+      var jcalData = ICAL.parse(resp)
+      var comp = new ICAL.Component(jcalData)
+      var allSubs = comp.getAllSubcomponents('vevent')
+      $.each(allSubs, function (i, el) {
+        allData.push(new ICAL.Event(el))
+      })
 
-      var d = data[0]
-      themap = L.map('mapid').setView([d['lat'], d['lng']], 12)
+      var d = allData[0]
+      var loc = d.location.split(', ')
+      themap = L.map('mapid').setView(loc, 12)
       L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(themap)
-      marker = L.marker([d['lat'], d['lng']])
+      marker = L.marker(loc)
         .bindPopup('')
         .addTo(themap)
         .openPopup()
