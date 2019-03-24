@@ -7,6 +7,10 @@
 </head>
 <body>
   <div id="mapid"></div>
+  <div id="controls">
+    <a href="#" class="prev">&larr;</a>
+    <a href="#" class="next">&rarr;</a>
+  </div>
   <script src="//code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="//unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
@@ -45,11 +49,7 @@ $(function () {
       msg += '<p>' + toMoment(d.endDate).format('Do MMMM') + '&ndash;' + endDate.format('Do MMMM')
       msg += ' (' + endDate.fromNow() + ')</p>'
     }
-    msg += '</div><p><a href="#" class="prev">&larr;</a>'
-    if (current !== 0) {
-      msg += '<a href="#" class="next pull-right">&rarr;</a>'
-    }
-    msg += '</p>'
+    msg += '</div>'
 
     var popup = marker.getPopup()
     popup.setContent(msg)
@@ -90,6 +90,7 @@ $(function () {
   })
 
   $('body').on('click', '.next', function () {
+    if (current === 0) return false
     current -= 1
     setupMarker()
     return false

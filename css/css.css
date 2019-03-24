@@ -7,6 +7,17 @@ html, body {
   height: 100%;
 }
 
+#controls {
+  z-index: 999;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px 10px;
+  margin: 5px 5px 0 0;
+  border: 1px solid gray;
+  background: white;
+}
+
 .pull-right {
   float: right;
 }
