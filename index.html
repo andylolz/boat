@@ -66,6 +66,9 @@ $(function () {
       $.each(allSubs, function (i, el) {
         allData.push(new ICAL.Event(el))
       })
+      allData = allData.sort(function (el1, el2) {
+        return (el1.endDate < el2.endDate) ? 1 : -1;
+      })
 
       var d = allData[0]
       var loc = d.location.split(', ')
