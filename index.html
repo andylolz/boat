@@ -28,7 +28,7 @@ $(function () {
 
   function setupMarker () {
     var d = allData[current]
-    var loc = d.location.split(', ')
+    var loc = d.location.split(',')
     marker.setLatLng(loc)
 
     var summary = d.summary
