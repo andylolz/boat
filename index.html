@@ -3,6 +3,7 @@
 <head>
   <title>Where&rsquo;s the boat to?</title>
   <link href="//unpkg.com/leaflet@1.0.3/dist/leaflet.css" rel="stylesheet" />
+  <link href="//cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" />
   <link href="css/css.css?ver={{ site.github.build_revision }}" rel="stylesheet" />
 </head>
 <body>
@@ -11,9 +12,11 @@
     <a href="#" class="prev">&larr;</a>
     <a href="#" class="next">&rarr;</a>
   </div>
+  <div id="visualization"></div>
   <script src="//code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="//unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
   <script src="js/ical.min.js?ver={{ site.github.build_revision }}"></script>
   <script>
 $(function () {
@@ -26,8 +29,8 @@ $(function () {
     return moment(timestamp.year + '-' + timestamp.month + '-' + timestamp.day, 'YYYY-M-D')
   }
 
-  function setupMarker () {
-    var d = allData[current]
+  function setupMarker (idx) {
+    var d = allData[idx]
     var loc = d.location.split(', ')
     marker.setLatLng(loc)
 
@@ -35,17 +38,17 @@ $(function () {
     summary = (summary.indexOf(' to ') !== -1) ? summary.split(' to ')[1] : ''
 
     var wasis = 'was'
-    if (current === 0) {
+    if (idx === 0) {
       wasis = 'is'
     }
     var msg = ''
     msg += '<div class="popupmsg"><h1>Jasmine ' + wasis + ' here</h1>'
     msg += '<img src="img/jasmine.jpg?ver={{ site.github.build_revision }}" width="100%" />'
     msg += '<h2><em>near ' + summary + '</em></h2>'
-    if (current === 0) {
+    if (idx === 0) {
       msg += '<p>Arrived ' + toMoment(d.endDate).fromNow() + '.</p>'
     } else {
-      var endDate = toMoment(allData[current - 1].endDate)
+      var endDate = toMoment(allData[idx - 1].endDate)
       msg += '<p>' + toMoment(d.endDate).format('Do MMMM') + '&ndash;' + endDate.format('Do MMMM')
       msg += ' (' + endDate.fromNow() + ')</p>'
     }
@@ -55,6 +58,21 @@ $(function () {
     popup.setContent(msg)
 
     themap.panTo(loc, {duration: 4})
+  }
+
+  function setupTimeline () {
+    var dataset = allData.slice(1).map(function (v, idx) {
+      return {
+        id: idx + 2,
+        content: (v.summary.indexOf(' to ') !== -1) ? v.summary.split(' to ')[1] : '',
+        start: v.endDate.toString().slice(0, 10),
+        end: allData[idx].endDate.toString().slice(0, 10)
+      }
+    })
+    var items = new vis.DataSet(dataset)
+    var container = document.getElementById('visualization')
+    var options = {stack: false, rtl: true}
+    var timeline = new vis.Timeline(container, items, options)
   }
 
   $.ajax({
@@ -70,6 +88,8 @@ $(function () {
         return (el1.endDate < el2.endDate) ? 1 : -1;
       })
 
+      setupTimeline()
+
       var d = allData[0]
       var loc = d.location.split(', ')
       themap = L.map('mapid').setView(loc, 12)
@@ -79,20 +99,20 @@ $(function () {
         .addTo(themap)
         .openPopup()
 
-      setupMarker()
+      setupMarker(0)
     }
   })
 
   $('body').on('click', '.prev', function () {
     current += 1
-    setupMarker()
+    setupMarker(current)
     return false
   })
 
   $('body').on('click', '.next', function () {
     if (current === 0) return false
     current -= 1
-    setupMarker()
+    setupMarker(current)
     return false
   })
 })
