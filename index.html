@@ -86,13 +86,14 @@ $(function () {
   })
 
   $('body').on('click', '.prev', function () {
+    if (current >= allData.length - 1) return false
     current += 1
     setupMarker(current)
     return false
   })
 
   $('body').on('click', '.next', function () {
-    if (current === 0) return false
+    if (current <= 0) return false
     current -= 1
     setupMarker(current)
     return false
