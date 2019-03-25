@@ -26,8 +26,8 @@ $(function () {
     return moment(timestamp.year + '-' + timestamp.month + '-' + timestamp.day, 'YYYY-M-D')
   }
 
-  function setupMarker () {
-    var d = allData[current]
+  function setupMarker (idx) {
+    var d = allData[idx]
     var loc = d.location.split(',')
     marker.setLatLng(loc)
 
@@ -35,17 +35,17 @@ $(function () {
     summary = (summary.indexOf(' to ') !== -1) ? summary.split(' to ')[1] : ''
 
     var wasis = 'was'
-    if (current === 0) {
+    if (idx === 0) {
       wasis = 'is'
     }
     var msg = ''
     msg += '<div class="popupmsg"><h1>Jasmine ' + wasis + ' here</h1>'
     msg += '<img src="img/jasmine.jpg?ver={{ site.github.build_revision }}" width="100%" />'
     msg += '<h2><em>near ' + summary + '</em></h2>'
-    if (current === 0) {
+    if (idx === 0) {
       msg += '<p>Arrived ' + toMoment(d.endDate).fromNow() + '.</p>'
     } else {
-      var endDate = toMoment(allData[current - 1].endDate)
+      var endDate = toMoment(allData[idx - 1].endDate)
       msg += '<p>' + toMoment(d.endDate).format('Do MMMM') + '&ndash;' + endDate.format('Do MMMM')
       msg += ' (' + endDate.fromNow() + ')</p>'
     }
@@ -81,20 +81,20 @@ $(function () {
         .addTo(themap)
         .openPopup()
 
-      setupMarker()
+      setupMarker(0)
     }
   })
 
   $('body').on('click', '.prev', function () {
     current += 1
-    setupMarker()
+    setupMarker(current)
     return false
   })
 
   $('body').on('click', '.next', function () {
     if (current === 0) return false
     current -= 1
-    setupMarker()
+    setupMarker(current)
     return false
   })
 })
