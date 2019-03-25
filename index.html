@@ -12,7 +12,7 @@
     <a href="#" class="prev">&larr;</a> |
     <a href="#" class="next">&rarr;</a>
   </div>
-  <div id="visualization"></div>
+  <div id="timeline"></div>
   <script src="//code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="//unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
@@ -70,7 +70,7 @@ $(function () {
       }
     })
     var items = new vis.DataSet(dataset)
-    var container = document.getElementById('visualization')
+    var container = document.getElementById('timeline')
     var options = {stack: false, rtl: true}
     var timeline = new vis.Timeline(container, items, options)
   }
