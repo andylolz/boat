@@ -85,7 +85,7 @@ $(function () {
         allData.push(new ICAL.Event(el))
       })
       allData = allData.filter(function (i) {
-        return i.location.match(/[\d., -]+/g)
+        return i.location.match(/^[\d., -]+$/g)
       }).sort(function (el1, el2) {
         return (el1.endDate < el2.endDate) ? 1 : -1
       })
@@ -106,13 +106,14 @@ $(function () {
   })
 
   $('body').on('click', '.prev', function () {
+    if (current >= allData.length - 1) return false
     current += 1
     setupMarker(current)
     return false
   })
 
   $('body').on('click', '.next', function () {
-    if (current === 0) return false
+    if (current <= 0) return false
     current -= 1
     setupMarker(current)
     return false
