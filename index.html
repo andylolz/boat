@@ -75,7 +75,7 @@ $(function () {
       var d = allData[0]
       var loc = d.location.split(', ')
       themap = L.map('mapid').setView(loc, 12)
-      L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(themap)
+      L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png').addTo(themap)
       marker = L.marker(loc)
         .bindPopup('')
         .addTo(themap)
