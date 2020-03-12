@@ -5,7 +5,7 @@
 <head>
   <title>Where&rsquo;s Jasmine?</title>
   <link href="//unpkg.com/leaflet@1.0.3/dist/leaflet.css" rel="stylesheet" />
-  <link href="css/css.css?ver={{ site.github.build_revision }}" rel="stylesheet" />
+  <link href="{{ site.github.url }}/css/css.css?ver={{ site.github.build_revision }}" rel="stylesheet" />
 </head>
 <body>
   <div id="mapid"></div>
@@ -16,7 +16,7 @@
   <script src="//code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="//unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-  <script src="js/ical.min.js?ver={{ site.github.build_revision }}"></script>
+  <script src="{{ site.github.url }}/js/ical.min.js?ver={{ site.github.build_revision }}"></script>
   <script>
 $(function () {
   var allData = []
