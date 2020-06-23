@@ -48,8 +48,11 @@ $(function () {
       msg += '<p>Arrived ' + toMoment(d.endDate).fromNow() + '.</p>'
     } else {
       var endDate = toMoment(allData[idx - 1].endDate)
-      msg += '<p>' + toMoment(d.endDate).format('Do MMMM') + '&ndash;' + endDate.format('Do MMMM')
-      msg += ' (' + endDate.fromNow() + ')</p>'
+      var msgInner = toMoment(d.endDate).format('Do MMMM')
+      if (endDate !== d.endDate) {
+        msgInner += '&ndash;' + endDate.format('Do MMMM')
+      }
+      msg += '<p>' + msgInner + ' (' + endDate.fromNow() + ')</p>'
     }
     msg += '</div>'
 
