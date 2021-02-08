@@ -63,7 +63,7 @@ $(function () {
   }
 
   $.ajax({
-    url: 'https://api.allorigins.win/get?url=https://calendar.google.com/calendar/ical/7phgh51gv2gnm4jqigj8qaf06g%40group.calendar.google.com/public/basic.ics',
+    url: 'https://api.allorigins.win/raw?url=https://calendar.google.com/calendar/ical/7phgh51gv2gnm4jqigj8qaf06g%40group.calendar.google.com/public/basic.ics',
     success: function (resp) {
       var jcalData = ICAL.parse(resp)
       var comp = new ICAL.Component(jcalData)
